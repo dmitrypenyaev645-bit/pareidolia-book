@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#85c8eb">
+  <link rel="icon" href="data:,">
+  <title>Парейдолия — предварительная HTML-версия</title>
+  <style>
+    @font-face{font-family:"Manrope";src:url("assets/fonts/Manrope-VariableFont_wght.ttf") format("truetype");font-style:normal;font-weight:200 800;font-display:block}
+    *{box-sizing:border-box}
+    html{height:100%;background:#17232c}
+    body{margin:0;min-height:100vh;min-height:100dvh;background:#17232c;color:#fff;font-family:"Manrope",Arial,sans-serif;display:grid;place-items:center;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));overflow:hidden}
+    .app{width:min(100%,calc((100vh - 24px)*2/3));width:min(100%,calc((100dvh - max(24px,calc(env(safe-area-inset-top) + env(safe-area-inset-bottom))))*2/3));aspect-ratio:2/3;position:relative}
+    .page{position:absolute;inset:0;background:#86caec;overflow:hidden;box-shadow:0 20px 70px #0008;container-type:inline-size}
+    .base,.contour{position:absolute;inset:0;width:100%;height:100%;display:block}
+    .base{object-fit:contain}
+    .contour{visibility:hidden;opacity:0;pointer-events:none}
+    .page.contour-on .contour{visibility:visible;opacity:1}
+    .hint{position:absolute;left:11.71875%;top:var(--hint-y);width:76.5625%;height:var(--hint-h);padding:0 3.41796875%;display:flex;align-items:center;justify-content:center;text-align:center;color:#38525c;background:rgba(250,247,235,.84);border:max(1px,.09765625cqw) solid rgba(84,115,128,.2);border-radius:3.515625cqw;font-family:"Manrope",Arial,sans-serif;font-size:2.34375cqw;line-height:1.4;font-weight:500;visibility:hidden;opacity:0;pointer-events:none}
+    .page.hint-on .hint{visibility:visible;opacity:1}
+    .hotspot{position:absolute;border:0;background:transparent;color:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+    .hotspot:focus-visible{outline:max(2px,.1953125cqw) solid #fff;outline-offset:2px}
+    .toggle{top:85.2864583333%;height:4.9479166667%;border-radius:3.7109375cqw}
+    .toggle[aria-pressed="true"]{box-shadow:inset 0 0 0 max(1px,.146484375cqw) rgba(73,109,130,.3)}
+    .toggle-contour{left:20.1171875%;width:31.0546875%}
+    .toggle-hint{left:53.515625%;width:26.3671875%}
+    .nav{top:92.4479166667%;width:7.03125%;height:4.6875%;border-radius:50%}
+    .back{left:7.03125%}.next{left:85.9375%}
+    .qr-link{position:absolute;left:40.72265625%;top:51.2369791667%;width:18.5546875%;aspect-ratio:1;display:block;background:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .qr-link img{width:100%;height:100%;display:block;object-fit:contain}
+    .qr-link:focus-visible{outline:max(2px,.1953125cqw) solid #38525c;outline-offset:2px}
+    .counter{position:fixed;right:12px;bottom:8px;font:12px/1 Arial,sans-serif;color:#fff8;background:#0005;padding:6px 9px;border-radius:20px;pointer-events:none}
+    .placeholder{background:linear-gradient(#70bce6 0%,#bfe8f8 70%,#eef8fb 100%);display:grid;place-items:center;text-align:center;padding:9%;color:#34556a}
+    .placeholder-card{background:#ffffffd9;border:2px dashed #52758a;border-radius:24px;padding:8%;max-width:80%;box-shadow:0 16px 40px #31566a33}
+    .placeholder h1{font-size:clamp(22px,4.4cqw,48px);margin:0 0 18px}.placeholder p{font-size:clamp(13px,2.4cqw,25px);line-height:1.45;margin:8px 0}.placeholder .tag{display:inline-block;margin-top:18px;padding:9px 15px;border-radius:999px;background:#52758a;color:white;font-weight:700}.placeholder .nav{background:#fff8;border:2px solid #52758a;color:#34556a;font-size:clamp(20px,4cqw,42px);display:grid;place-items:center}
+    .noscript{position:fixed;inset:auto 1rem 1rem;background:#9b2c2c;padding:1rem;border-radius:8px}
+    @media(max-width:600px){body{background:#0c151b}.app{width:min(100%,calc((100dvh - max(24px,calc(env(safe-area-inset-top) + env(safe-area-inset-bottom))))*2/3))}.page{box-shadow:none}.counter{display:none}}
+    @media(prefers-reduced-motion:reduce){.contour,.hint{transition:none}}
+  </style>
+</head>
+<body>
+  <main class="app" id="app" aria-live="polite"></main>
+  <div class="counter" id="counter"></div>
+  <noscript><div class="noscript">Для интерактивности требуется JavaScript.</div></noscript>
+  <script>
+  const pages=[
+    {n:'01',title:'Обложка',image:'assets/pages/page-01.png'},
+    {n:'02',title:'Приветствие',image:'assets/pages/page-02.png'},
+    {n:'03',title:'Спящий полярный мишка',image:'assets/pages/page-03.png',hint:'Среди бескрайних небесных снегов устроился на ночлег огромный северный странник.',hintY:1128,hintH:142,contours:['assets/contours/page-03.svg']},
+    {n:'04',title:'Парусный фрегат',image:'assets/pages/page-04.png',hint:'Этот белоснежный странник поймал попутный ветер и держит курс к далёким берегам.',hintY:1128,hintH:142,contours:['assets/contours/page-04.svg']},
+    {n:'05',title:'Кот',image:'assets/pages/page-05.png',hint:'Мгновение замерло в небесной вышине: пушистый охотник припал к земле.',hintY:1128,hintH:142,parts:3},
+    {n:'06',title:'Сказочный замок',image:'assets/pages/page-06.png',hint:'Дом короля и королевы из сказки вырос прямо посреди неба.',hintY:1128,hintH:142,parts:2},
+    {n:'07',title:'Добрый мудрец',image:'assets/pages/page-07.png',hint:'Добрый мыслитель, погруженный в вечные думы.',hintY:1128,hintH:142,parts:3},
+    {n:'08',title:'Морская черепаха',image:'assets/pages/page-08.png',hint:'Этот неторопливый житель заоблачных глубин никуда не спешит, расправив свои мощные ласты он плавно скользит.',hintY:1111,hintH:159,parts:2},
+    {n:'09',title:'Птица',image:'assets/pages/page-09.png',hint:'Широко раскинув огромные крылья, этот белоснежный пернатый странник парит в небесных потолках.',hintY:1119.5,hintH:150.5,parts:4},
+    {n:'10',title:'Бегущая лошадь',image:'assets/pages/page-10.png',hint:'Дикий скакун мчиться на перегонки с ветром.',hintY:1119.5,hintH:150.5,parts:4},
+    {n:'11',title:'Падающая комета',image:'assets/pages/page-11.png',hint:'Космическая гостья пронзает небосвод.',hintY:1119.5,hintH:150.5,parts:2},
+    {n:'12',title:'Китайский дракон',image:'assets/pages/page-12.png',hint:'Длинное чешуйчатое тело древнего хранителя китайской мудрости плавно струится по небу.',hintY:1119.5,hintH:150.5,parts:4},
+    {n:'13',title:'Стая бегущих овечек',image:'assets/pages/page-13.png',hint:'Ветер выгнал на заоблачное пастбище целую стаю пушистых клубков.',hintY:1119.5,hintH:150.5,parts:10},
+    {n:'14',title:'Следы великана',image:'assets/pages/page-14.png',hint:'Кто-то огромный прошёл по небесному ковру.',hintY:1119.5,hintH:150.5,parts:4},
+    {n:'15',title:'Кит',image:'assets/pages/page-15.png',hint:'Настоящий хозяин океана всплыл на поверхность синего неба.',hintY:1119.5,hintH:150.5,parts:2},
+    {n:'16',title:'НЛО',image:'assets/pages/page-16.png',hint:'Идеальный гладкий диск завис в воздухе, вопреки законам физики.',hintY:1119.5,hintH:150.5,parts:2},
+    {n:'17',title:'Девушка',image:'assets/pages/page-17.png',hint:'Юная муза ветра застыла в изящном полуповороте.',hintY:1119.5,hintH:150.5,parts:2},
+    {n:'18',title:'Задник',image:'assets/pages/page-18.png',qr:true}
+  ];
+  let index=0;const state=pages.map(()=>({contour:false,hint:false}));const app=document.querySelector('#app');const counter=document.querySelector('#counter');
+  function contourList(p){if(p.contours)return p.contours;if(!p.parts)return[];return Array.from({length:p.parts},(_,i)=>`assets/contours/page-${p.n}-part-${i+1}.svg`)}
+  function button(cls,label,pressed=false){return `<button class="hotspot ${cls}" aria-label="${label}"${pressed!==null?` aria-pressed="${pressed}"`:''}>${label}</button>`}
+  function render(){const p=pages[index],s=state[index];let html;if(p.placeholder){html=`<section class="page placeholder" data-page="04" aria-label="04 — Парусный фрегат, временный плейсхолдер"><div class="placeholder-card"><h1>04 — Парусный фрегат</h1><p>Временный технический плейсхолдер только для проверки последовательности страниц.</p><p>Изображение находится на согласовании и в HTML не переносилось.</p><span class="tag">НЕ ФИНАЛЬНАЯ СТРАНИЦА</span></div>${button('nav back','Назад',null)}${button('nav next','Вперёд',null)}</section>`}else{const interactive=!!p.hint;const hintStyle=interactive?` style="--hint-y:${p.hintY/15.36}%;--hint-h:${p.hintH/15.36}%"`:'';html=`<section class="page${s.contour?' contour-on':''}${s.hint?' hint-on':''}"${hintStyle} data-page="${p.n}" aria-label="${p.n} — ${p.title}"><img class="base" src="${p.image}" alt="${p.title}">${interactive?contourList(p).map(src=>`<img class="contour" src="${src}" alt="" aria-hidden="true">`).join(''):''}${interactive?`<div class="hint" role="status" aria-hidden="${!s.hint}">${p.hint}</div>${button('toggle toggle-contour','Показать контур',s.contour)}${button('toggle toggle-hint','Подсказка',s.hint)}`:''}${p.qr?`<a class="qr-link" href="https://disk.yandex.ru/d/80MRDTp6336o6A" target="_blank" rel="noopener noreferrer" aria-label="Открыть папку материалов для печати на Яндекс.Диске"><img src="assets/qr/print-materials-yandex-disk.png" alt="QR-код папки материалов для печати"></a>`:''}${index>0?button('nav back','Назад',null):''}${index<pages.length-1?button('nav next','Вперёд',null):''}</section>`}app.innerHTML=html;counter.textContent=`${p.n} / 18`;bind();}
+  function setDynamicState(page,type,on){page.classList.toggle(`${type}-on`,on);if(type==='hint')page.querySelector('.hint')?.setAttribute('aria-hidden',String(!on));page.querySelectorAll(type==='contour'?'.contour':'.hint').forEach(el=>{el.style.visibility=on?'visible':'hidden';el.style.opacity=on?'1':'0'})}
+  function bind(){const page=app.firstElementChild;page.querySelector('.back')?.addEventListener('click',()=>go(-1));page.querySelector('.next')?.addEventListener('click',()=>go(1));page.querySelector('.toggle-contour')?.addEventListener('click',e=>{state[index].contour=!state[index].contour;setDynamicState(page,'contour',state[index].contour);e.currentTarget.setAttribute('aria-pressed',state[index].contour)});page.querySelector('.toggle-hint')?.addEventListener('click',e=>{state[index].hint=!state[index].hint;setDynamicState(page,'hint',state[index].hint);e.currentTarget.setAttribute('aria-pressed',state[index].hint)});}
+  function go(delta){index=Math.max(0,Math.min(pages.length-1,index+delta));render()}
+  addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(-1);if(e.key==='ArrowRight')go(1)});render();
+  </script>
+</body>
+</html>
